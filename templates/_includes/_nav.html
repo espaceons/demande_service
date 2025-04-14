@@ -1,0 +1,40 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="{% url 'dashboard:accueil' %}">Mon Application</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'dashboard:accueil' %}">Accueil</a>
+            </li>
+            {% if user.is_authenticated %}
+                {% if user.is_superuser %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'clients:client_list' %}">Clients</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'articles:article_list' %}">Articles</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'commandes:commande_list' %}">Commandes</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'commandes:commande_list' %}">Commandes</a>
+                    </li>
+                {% endif %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'clients:logout' %}">Déconnexion</a>
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'clients:inscription_client' %}">Inscription</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'clients:login' %}">Connexion</a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+</nav>

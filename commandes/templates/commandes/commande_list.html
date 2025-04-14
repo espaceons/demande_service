@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}Liste des Commandes{% endblock %}
+
+{% block content %}
+    <h1>Liste des Commandes</h1>
+    <a href="{% url 'commandes:commande_create' %}" class="btn btn-primary mb-3">Ajouter une Commande</a>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Client</th>
+                <th>Article</th>
+                <th>Date Prise en Charge</th>
+                <th>Montant</th>
+                <th>Statut Paiement</th>
+                <th>Confirmé</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for commande in commandes %}
+            <tr>
+                <td>{{ commande.client.user.username }}</td>
+                <td>{{ commande.article.nom }}</td>
+                <td>{{ commande.date_prise_en_charge }}</td>
+                <td>{{ commande.montant }}</td>
+                <td>{{ commande.statut_paiement }}</td>
+                <td>
+                    {% if commande.confirme %}
+                        Oui
+                    {% else %}
+                        Non
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'commandes:commande_update' commande.pk %}" class="btn btn-sm btn-warning">Modifier</a>
+                    <a href="{% url 'commandes:commande_delete' commande.pk %}" class="btn btn-sm btn-danger">Supprimer</a>
+                    {% if not commande.confirme %}
+                        <a href="{% url 'commandes:commande_confirme' commande.pk %}" class="btn btn-sm btn-success">Confirmer</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
