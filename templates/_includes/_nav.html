@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="{% url 'dashboard:accueil' %}">Mon Application</a>
+    <a class="navbar-brand" href="{% url 'dashboard:accueil' %}">Demande Service</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -7,9 +7,14 @@
         <ul class="navbar-nav">
             <li class="nav-item active">
                 <a class="nav-link" href="{% url 'dashboard:accueil' %}">Accueil</a>
+                {% if request.user.is_staff %}
+                    <li>
+                        <a class="nav-link" href="{% url 'unites:unite_mesure_list' %}">Unités de Mesure</a>
+                    </li>
+                {% endif %}
             </li>
             {% if user.is_authenticated %}
-                {% if user.is_superuser %}
+                {% if user.is_superuser %}<!-- pour afficher tous les liens (Clients, Articles, Commandes) pour les administrateurs. -->
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'clients:client_list' %}">Clients</a>
                     </li>
@@ -19,7 +24,7 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'commandes:commande_list' %}">Commandes</a>
                     </li>
-                {% else %}
+                {% else %} <!-- Pour les clients (non-administrateurs), j'affiche uniquement les liens "Articles" et "Commandes". -->
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'commandes:commande_list' %}">Commandes</a>
                     </li>

@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+        <h1>Supprimer l'Unité de Mesure</h1>
+        <p>Êtes-vous sûr de vouloir supprimer l'unité de mesure "{{ unite.nom }}" ?</p>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Oui, supprimer</button>
+            <a href="{% url 'unites:unite_mesure_list' %}" class="btn btn-secondary">Annuler</a>
+        </form>
+    </div>
+{% endblock %}

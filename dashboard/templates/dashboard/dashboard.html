@@ -4,70 +4,80 @@
 {% block content %}
 <div class="container-fluid">
     <h1 class="mt-4">Tableau de Bord</h1>
-    
-    <!-- Cartes Statistiques -->
-    <div class="row">
-        {% for app in applications %}
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-primary shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                {{ app.name }}
-                            </div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                {% for stat, value in app.stats.items %}
-                                    <small>{{ stat }}: <strong>{{ value }}</strong></small><br>
-                                {% endfor %}
+
+    {% if user.is_authenticated %} <!--  condition pour vérifier si l'utilisateur est connecté -->
+        {% if user.is_superuser %}<!-- condition pour distinguer les administrateurs des clients -->
+            <div class="row">
+                {% for app in applications %}
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-left-primary shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                        {{ app.name }}
+                                    </div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        {% for stat, value in app.stats.items %}
+                                            <small>{{ stat }}: <strong>{{ value }}</strong></small><br>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-{{ app.icon }} fa-2x text-gray-300"></i>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-auto">
-                            <i class="fas fa-{{ app.icon }} fa-2x text-gray-300"></i>
-                        </div>
+                        <a href="{% url app.url %}" class="btn btn-light btn-block">Gérer</a>
                     </div>
                 </div>
-                <a href="{% url app.url %}" class="btn btn-light btn-block">Gérer</a>
+                {% endfor %}
             </div>
-        </div>
-        {% endfor %}
-    </div>
 
-    <!-- Dernières Commandes -->
-    <div class="card shadow mb-4">
-        <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Dernières Commandes</h6>
-        </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Client</th>
-                            <th>Date</th>
-                            <th>Montant</th>
-                            <th>Statut</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for cmd in commandes_recentes %}
-                        <tr>
-                            <td>{{ cmd.id }}</td>
-                            <td>{{ cmd.client.nom }}</td>
-                            <td>{{ cmd.date_commande|date:"d/m/Y" }}</td>
-                            <td>{{ cmd.montant }} €</td>
-                            <td>
-                                <span class="badge badge-{{ cmd.get_statut_display|lower }}">
-                                    {{ cmd.get_statut_display }}
-                                </span>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Dernières Commandes</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Client</th>
+                                    <th>Date</th>
+                                    <th>Montant</th>
+                                    <th>Statut</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for cmd in commandes_recentes %}
+                                <tr>
+                                    <td>{{ cmd.id }}</td>
+                                    <td>{{ cmd.client.nom }}</td>
+                                    <td>{{ cmd.date_commande|date:"d/m/Y" }}</td>
+                                    <td>{{ cmd.montant }} DTN</td>
+                                    <td>
+                                        <span class="badge badge-{{ cmd.get_statut_display|lower }}">
+                                            {{ cmd.get_statut_display }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
+        {% else %}
+            <h1>Bienvenue, Client !</h1>
+            <p>Voici votre tableau de bord personnalisé.</p>
+            {# Ajoutez ici le contenu spécifique au client #}
+        {% endif %}
+    {% else %}
+        <h1>Publicité</h1>
+        <p>Découvrez nos offres exceptionnelles !</p>
+        {# Ajoutez ici le contenu publicitaire #}
+    {% endif %}
 </div>
 {% endblock %}

@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+        <h1>{% if form.instance.pk %}Modifier{% else %}Ajouter{% endif %} une Unité de Mesure</h1>
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                {{ form.as_p }}
+            </div>
+            <button type="submit" class="btn btn-primary">Enregistrer</button>
+            <a href="{% url 'unites:unite_mesure_list' %}" class="btn btn-secondary">Annuler</a>
+        </form>
+    </div>
+{% endblock %}

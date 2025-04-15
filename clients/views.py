@@ -1,6 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Client
 from .forms import ClientForm
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import authenticate, login, logout
 
 
 # CRUD Clients : affichage, mise a jour, suppression, creation
@@ -41,9 +44,7 @@ def client_delete(request, pk):
 
 # 
 
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth import authenticate, login, logout
+
 
 def inscription_client(request):
     if request.method == 'POST':
@@ -54,7 +55,7 @@ def inscription_client(request):
             client = client_form.save(commit=False)
             client.user = user
             client.save()
-            return redirect('login')
+            return redirect('clients:login')
     else:
         user_form = UserCreationForm()
         client_form = ClientForm()

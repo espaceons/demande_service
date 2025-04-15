@@ -1,0 +1,15 @@
+.container {
+    display: flex;
+    flex-wrap: wrap; /* Permet aux éléments de passer à la ligne */
+  }
+  
+  .item {
+    flex: 1 1 200px; /* Les éléments prennent au moins 200px de large */
+  }
+
+  /* Styles pour les écrans de moins de 600px de large */
+@media (max-width: 600px) {
+    .item {
+      width: 100%; /* Les éléments prennent toute la largeur */
+    }
+  }

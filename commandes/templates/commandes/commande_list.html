@@ -3,44 +3,149 @@
 {% block title %}Liste des Commandes{% endblock %}
 
 {% block content %}
-    <h1>Liste des Commandes</h1>
-    <a href="{% url 'commandes:commande_create' %}" class="btn btn-primary mb-3">Ajouter une Commande</a>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Client</th>
-                <th>Article</th>
-                <th>Date Prise en Charge</th>
-                <th>Montant</th>
-                <th>Statut Paiement</th>
-                <th>Confirmé</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for commande in commandes %}
-            <tr>
-                <td>{{ commande.client.user.username }}</td>
-                <td>{{ commande.article.nom }}</td>
-                <td>{{ commande.date_prise_en_charge }}</td>
-                <td>{{ commande.montant }}</td>
-                <td>{{ commande.statut_paiement }}</td>
-                <td>
-                    {% if commande.confirme %}
-                        Oui
-                    {% else %}
-                        Non
-                    {% endif %}
-                </td>
-                <td>
-                    <a href="{% url 'commandes:commande_update' commande.pk %}" class="btn btn-sm btn-warning">Modifier</a>
-                    <a href="{% url 'commandes:commande_delete' commande.pk %}" class="btn btn-sm btn-danger">Supprimer</a>
-                    {% if not commande.confirme %}
-                        <a href="{% url 'commandes:commande_confirme' commande.pk %}" class="btn btn-sm btn-success">Confirmer</a>
-                    {% endif %}
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+<div class="container">
+    <h1 class="my-4">Liste des Commandes</h1>
+
+    <a href="{% url 'commandes:commande_create' %}" class="btn btn-primary mb-4">
+        <i class="fas fa-plus"></i> Ajouter une Commande
+    </a>
+
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th>Nom du client</th>
+                    <th>Téléphone</th>
+                    <th>Article</th>
+                    <th>Date Prise en Charge</th>
+                    <th>Montant</th>
+                    <th>Statut Paiement</th>
+                    <th>Statut Commande</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for commande in commandes %}
+                <tr>
+                    <td>{{ commande.client.user }}</td>
+                    <td>{{ commande.client.telephone }}</td>
+                    <td>{{ commande.article.nom }}</td>
+                    <td>{{ commande.date_prise_en_charge|date:"d/m/Y" }}</td>
+                    <td>{{ commande.montant }} DTN</td>
+                    <td>
+                        <span class="badge {% if commande.statut_paiement == 'payé' %}bg-success{% else %}bg-warning{% endif %}">
+                            {{ commande.statut_paiement|title }}
+                        </span>
+                    </td>
+                    <td>
+                        {% if commande.confirme %}
+                            <div class="text-success">
+                                <i class="fas fa-check-circle"></i> Confirmée
+                                <div class="text-muted small">
+                                    Le {{ commande.date_confirmation|date:"d/m/Y à H:i" }}
+                                    {% if commande.confirme_par %}
+                                        par {{ commande.confirme_par.username }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% else %}
+                            <span class="text-warning">
+                                <i class="fas fa-clock"></i> En attente
+                            </span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="btn-group btn-group-sm" role="group">
+                            {% if commande.confirme %}
+                                {% if request.user.is_staff %}
+                                    <a href="{% url 'commandes:commande_update' commande.pk %}"
+                                       class="btn btn-warning"
+                                       title="Modifier">
+                                        <i class="fas fa-edit">Modifier</i>
+                                    </a>
+                                    <a href="{% url 'commandes:commande_delete' commande.pk %}"
+                                       class="btn btn-danger"
+                                       title="Supprimer"
+                                       onclick="return confirm('Supprimer cette commande ?')">
+                                        <i class="fas fa-trash-alt">Supprimer</i>
+                                    </a>
+                                    <a href="{% url 'commandes:commande_annuler_confirmation' commande.pk %}"
+                                       class="btn btn-secondary"
+                                       title="Annuler Confirmation"
+                                       onclick="return confirm('Annuler Confirmation ?')">
+                                        <i class="fas fa-trash-alt">Annuler</i>
+                                    </a>
+                                {% else %}
+                                    <a href="{% url 'commandes:commande_detail_confirmation' commande.pk %}"
+                                       class="btn btn-info"
+                                       data-bs-toggle="tooltip"
+                                       title="Détails confirmation">
+                                        <i class="fas fa-info-circle">Detail Commande</i>
+                                    </a>
+                                {% endif %}
+                            {% else %}
+                                {% if request.user.is_authenticated and commande.client.user == request.user %}
+                                    <a href="{% url 'commandes:commande_detail_confirmation' commande.pk %}"
+                                       class="btn btn-info"
+                                       data-bs-toggle="tooltip"
+                                       title="Détails">
+                                        <i class="fas fa-info-circle">Detail</i>
+                                    </a>
+                                {% endif %}
+                                {% if request.user.is_staff or commande.client.user == request.user %}
+                                    <a href="{% url 'commandes:commande_update' commande.pk %}"
+                                       class="btn btn-warning"
+                                       title="Modifier">
+                                        <i class="fas fa-edit">Modifier</i>
+                                    </a>
+                                {% endif %}
+                                {% if request.user.is_staff %}
+                                    <a href="{% url 'commandes:commande_confirme' commande.pk %}"
+                                       class="btn btn-success"
+                                       title="Confirmer">
+                                        Confirmer
+                                    </a>
+                                {% endif %}
+                                {% if commande.client.user == request.user %}
+                                    <a href="{% url 'commandes:commande_delete' commande.pk %}"
+                                       class="btn btn-danger"
+                                       title="Supprimer"
+                                       onclick="return confirm('Supprimer cette commande ?')">
+                                        <i class="fas fa-trash-alt">Supprimer</i>
+                                    </a>
+                                {% endif %}
+                            {% endif %}
+
+                            {% if request.user.is_staff and not commande.confirme %}
+                                <a href="{% url 'commandes:commande_delete' commande.pk %}"
+                                   class="btn btn-danger"
+                                   title="Supprimer"
+                                   onclick="return confirm('Supprimer cette commande ?')">
+                                    <i class="fas fa-trash-alt">Supprimer</i>
+                                </a>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8" class="text-center py-4 text-muted">
+                        <i class="fas fa-inbox fa-2x mb-2"></i><br>
+                        Aucune commande trouvée
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% block javascript %}
+<script>
+    // Activation des tooltips Bootstrap
+    $(document).ready(function(){
+        $('[data-bs-toggle="tooltip"]').tooltip();
+    });
+</script>
+{% endblock %}
 {% endblock %}

@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Détails de Confirmation de la Commande{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/commandes.css' %}">
+{% endblock %}
+
+{% block content %}
+    <h1>Détails de Confirmation de la Commande {{ commande.id }}</h1>
+    <p>Client : {{ commande.client.user.username }}</p>
+    <p>Article : {{ commande.article.nom }}</p>
+    <p>Date de Prise en Charge : {{ commande.date_prise_en_charge }}</p>
+    <p>Montant : {{ commande.montant }}</p>
+    <p>Statut Paiement : {{ commande.statut_paiement }}</p>
+    <p>Confirmé : {% if commande.confirme %}Oui{% else %}Non{% endif %}</p>
+    <a href="javascript:history.back()" class="btn btn-info">
+        <i class="fas fa-arrow-left">Retour</i> 
+    </a>
+    {# Ajoutez ici d'autres détails de confirmation #}
+{% endblock %}

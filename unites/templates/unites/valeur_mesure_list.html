@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Liste des Valeurs de Mesure</h1>
+    <a href="{% url 'unites:valeur_mesure_create' %}">Ajouter une Valeur de Mesure</a>
+    <table>
+        <thead>
+            <tr>
+                <th>Unité</th>
+                <th>Valeur</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for valeur in valeurs %}
+                <tr>
+                    <td>{{ valeur.unite }}</td>
+                    <td>{{ valeur.valeur }}</td>
+                    <td>
+                        <a href="{% url 'unites:valeur_mesure_update' valeur.pk %}">Modifier</a>
+                        <a href="{% url 'unites:valeur_mesure_delete' valeur.pk %}">Supprimer</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
