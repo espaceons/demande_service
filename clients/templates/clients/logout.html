@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}Déconnexion Client{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1>Déconnexion Réussie</h1>
+        <p>Vous avez été déconnecté avec succès.</p>
+        <p><a href="{% url 'clients:login' %}" class="btn btn-primary">Se reconnecter</a></p>
+        <p><a href="{% url 'accueil' %}" class="btn btn-secondary">Retour à l'accueil</a></p>
+    </div>
+{% endblock %}

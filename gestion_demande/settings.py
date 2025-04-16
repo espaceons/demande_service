@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'commandes',
     'dashboard',
     'unites',
+    'clients_auth',
 ]
 
 MIDDLEWARE = [

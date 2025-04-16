@@ -3,11 +3,20 @@
 {% block title %}Inscription Client{% endblock %}
 
 {% block content %}
-    <h1>Inscription Client</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ user_form.as_p }}
-        {{ client_form.as_p }}
-        <button type="submit" class="btn btn-primary">S'inscrire</button>
-    </form>
+    <div class="container">
+        <h1>Inscription Client</h1>
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <h2>Informations d'utilisateur</h2>
+                {{ user_form.as_p }}
+            </div>
+            <div class="mb-3">
+                <h2>Informations de profil</h2>
+                {{ profile_form.as_p }}
+            </div>
+            <button type="submit" class="btn btn-primary">S'inscrire</button>
+        </form>
+        <p class="mt-3">Déjà un compte ? <a href="{% url 'clients:login' %}">Se connecter</a></p>
+    </div>
 {% endblock %}

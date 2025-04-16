@@ -4,4 +4,5 @@ from .models import Article
 class ArticleForm(forms.ModelForm):
     class Meta:
         model = Article
-        fields = '__all__'
+        # Excluez le champ 'client' pour qu'il ne soit pas affiché dans le formulaire
+        exclude = ['client']

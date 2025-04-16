@@ -27,7 +27,7 @@
             <tbody>
                 {% for commande in commandes %}
                 <tr>
-                    <td>{{ commande.client.user }}</td>
+                    <td>{{ commande.client.username }}</td>
                     <td>{{ commande.client.telephone }}</td>
                     <td>{{ commande.article.nom }}</td>
                     <td>{{ commande.date_prise_en_charge|date:"d/m/Y" }}</td>
@@ -58,23 +58,9 @@
                         <div class="btn-group btn-group-sm" role="group">
                             {% if commande.confirme %}
                                 {% if request.user.is_staff %}
-                                    <a href="{% url 'commandes:commande_update' commande.pk %}"
-                                       class="btn btn-warning"
-                                       title="Modifier">
-                                        <i class="fas fa-edit">Modifier</i>
-                                    </a>
-                                    <a href="{% url 'commandes:commande_delete' commande.pk %}"
-                                       class="btn btn-danger"
-                                       title="Supprimer"
-                                       onclick="return confirm('Supprimer cette commande ?')">
-                                        <i class="fas fa-trash-alt">Supprimer</i>
-                                    </a>
-                                    <a href="{% url 'commandes:commande_annuler_confirmation' commande.pk %}"
-                                       class="btn btn-secondary"
-                                       title="Annuler Confirmation"
-                                       onclick="return confirm('Annuler Confirmation ?')">
-                                        <i class="fas fa-trash-alt">Annuler</i>
-                                    </a>
+                                    <a href="{% url 'commandes:commande_update' commande.pk %}" class="btn btn-warning" title="Modifier">  <i class="fas fa-edit">Modifier</i> </a>
+                                    <a href="{% url 'commandes:commande_delete' commande.pk %}" class="btn btn-danger" title="Supprimer"   onclick="return confirm('Supprimer cette commande ?')"> <i class="fas fa-trash-alt">Supprimer</i>  </a>
+                                    <a href="{% url 'commandes:commande_annuler_confirmation' commande.pk %}" class="btn btn-secondary" title="Annuler Confirmation"   onclick="return confirm('Annuler Confirmation ?')"> <i class="fas fa-trash-alt">Annuler</i> </a>
                                 {% else %}
                                     <a href="{% url 'commandes:commande_detail_confirmation' commande.pk %}"
                                        class="btn btn-info"

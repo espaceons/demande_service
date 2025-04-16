@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Commande
 from .forms import CommandeForm
 from django.utils import timezone
-
+from django.contrib.auth.decorators import login_required
 
 
 # CRUD Commandes : affichage, mise a jour, suppression, creation
@@ -13,21 +13,25 @@ def commande_list(request):
     if request.user.is_superuser:
         commandes = Commande.objects.all()
     else:
-        commandes = Commande.objects.filter(client__user=request.user)
-    return render(request, 'commandes/commande_list.html', {'commandes': commandes})
+        commandes = Commande.objects.filter(client=request.user)
+    context = {
+        'commandes': commandes
+        }
+    return render(request, 'commandes/commande_list.html', context)
 
+
+
+@login_required
 def commande_create(request):
     if request.method == 'POST':
         form = CommandeForm(request.POST)
         if form.is_valid():
             commande = form.save(commit=False)
-            commande.client = request.user.client  # Associer la commande au client connecté
-            commande.date_commande = timezone.now()  # Définir la date de commande actuelle
-            commande.date_confirmation = timezone.now()
-            commande.date_prise_en_charge = commande.date_confirmation # Définir la date de prise en charge à la date de confirmation a la creation
-            commande.montant = 0  # Initialiser le montant à 0 ou à une valeur par défaut
+            commande.client = request.user # ASSIGNEZ l'utilisateur connecté ici
             commande.save()
             return redirect('commandes:commande_list')
+        else:
+            print(form.errors)  # Affiche les erreurs dans la console
     else:
         form = CommandeForm()
     return render(request, 'commandes/commande_form.html', {'form': form})
